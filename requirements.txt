@@ -2,6 +2,9 @@
 pyrogram
 TgCrypto
 pyromod==1.5
+python-telegram-bot==13.15
+telegraph==2.2.0
+telethon==1.33.1
 # --- For-Database ------------ #
 pymongo==3.12.3
 dnspython
