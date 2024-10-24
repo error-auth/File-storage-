@@ -54,7 +54,7 @@ RUN apt update && apt upgrade -y && \
     unzip \
     libopus0 \
     libopus-dev \
-    && rm -rf /var/lib/apt/lists /var/cache/apt/archives /tmp
+    && ls
 
 
 COPY requirements.txt requirements.txt
