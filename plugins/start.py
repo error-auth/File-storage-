@@ -156,7 +156,7 @@ async def not_joined(client: Client, message: Message):
             ],
             [
                 InlineKeyboardButton(
-                    "🏢 𝗢𝗧𝗔𝗞𝗨𝗦' 𝗠𝗢𝗧𝗘𝗟 🏢",
+                    "🏢 𝗕𝗟𝗘𝗔𝗖𝗛 🏢",
                     url=CHANNEL_3_LINK
                 )
             ]
