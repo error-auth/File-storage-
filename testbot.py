@@ -2,8 +2,8 @@ import logging
 import asyncio
 from pyrogram import Client, filters
 from telebot import TeleBot
-from config import TG_BOT_TOKEN, API_ID, API_HASH, FORCE_SUB_CHANNEL, CHANNEL_ID
-
+from config import API_ID, API_HASH, FORCE_SUB_CHANNEL, CHANNEL_ID
+BOT_TOKEN="7392123403:AAGubOlCPNRWy1YiQNcXxl4Ftb7AlmZa7E0"
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
